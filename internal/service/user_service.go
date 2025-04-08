@@ -19,7 +19,7 @@ func NewUserService(userRepo repository.UserRepository, tokenService TokenServic
 	}
 }
 
-func (s *userService) RegisterUser(creds dto.UserRegister) (*models.User, error) {
+func (s *userService) RegisterUser(creds dto.UserRegister) (*models.Token, error) {
 	exists, err := s.userRepo.CheckEmailExists(creds.Email)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,12 @@ func (s *userService) RegisterUser(creds dto.UserRegister) (*models.User, error)
 	}
 
 	err = s.userRepo.Create(&user)
-	return &user, err
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := s.tokenService.GenerateToken(user.ID)
+	return token, err
 }
 
 func (s *userService) LoginUser(creds dto.UserLogin) (*models.Token, error) {

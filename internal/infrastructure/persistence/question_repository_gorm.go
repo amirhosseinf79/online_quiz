@@ -3,6 +3,7 @@ package persistence
 import (
 	"github.com/amirhosseinf79/online_quiz/internal/domain/models"
 	"github.com/amirhosseinf79/online_quiz/internal/domain/repository"
+	"github.com/amirhosseinf79/online_quiz/internal/dto"
 	"gorm.io/gorm"
 )
 
@@ -32,4 +33,17 @@ func (r *questionRepo) GetByID(id uint) (*models.Question, error) {
 		return nil, err
 	}
 	return &question, nil
+}
+
+func (r *questionRepo) GetAllByFilter(filter dto.QuestionFilter) ([]*models.Question, int64, error) {
+	var questions []*models.Question
+	var total int64
+
+	offset, limit := (filter.Page-1)*filter.PageSize, filter.PageSize
+	query := r.db.Model(&models.Question{}).Where("quiz_id = ?", filter.QuizID).Preload("Answers").Count(&total)
+	if err := query.Offset(offset).Limit(limit).Find(&questions).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return questions, total, nil
 }

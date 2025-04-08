@@ -7,7 +7,7 @@ import (
 
 type QuizRepository interface {
 	GetByID(id uint) (*models.Quiz, error)
-	GetAllByFilter(filter *dto.QuizFilter) ([]*models.Quiz, int64, error)
+	GetAllByFilter(filter dto.QuizFilter) ([]*models.Quiz, int64, error)
 	Create(quiz *models.Quiz) error
 	Update(quiz *models.Quiz) error
 	Delete(id uint) error

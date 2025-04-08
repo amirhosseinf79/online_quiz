@@ -29,17 +29,18 @@ func (r *quizRepo) Delete(id uint) error {
 }
 
 func (r *quizRepo) GetByID(id uint) (quiz *models.Quiz, err error) {
-	if err := r.db.Preload("Answers").Preload("Questions").First(&quiz, id).Error; err != nil {
+	if err := r.db.First(&quiz, id).Error; err != nil {
 		return nil, err
 	}
 	return
 }
 
-func (r *quizRepo) GetAllByFilter(filter *dto.QuizFilter) (quizzes []*models.Quiz, total int64, err error) {
+func (r *quizRepo) GetAllByFilter(filter dto.QuizFilter) (quizzes []*models.Quiz, total int64, err error) {
 	query := r.db.Model(&models.Quiz{})
 	if filter.Name != "" {
 		query = query.Where("LOWER(name) LIKE ?", "LOWER(%"+filter.Name+"%)")
 	}
-	err = query.Count(&total).Find(&quizzes).Error
+	offset, limit := (filter.Page-1)*filter.PageSize, filter.PageSize
+	err = query.Count(&total).Offset(offset).Limit(limit).Find(&quizzes).Error
 	return
 }
