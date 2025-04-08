@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"github.com/amirhosseinf79/online_quiz/pkg"
 	"gorm.io/gorm"
 )
 
@@ -18,7 +19,7 @@ type Token struct {
 }
 
 func (t *Token) BeforeCreate(tx *gorm.DB) (err error) {
-	// t.Token = generateToken()
-	// t.RefreshToken = generateRefreshToken()
+	t.Token = pkg.GenerateToken()
+	t.RefreshToken = pkg.GenerateToken()
 	return nil
 }

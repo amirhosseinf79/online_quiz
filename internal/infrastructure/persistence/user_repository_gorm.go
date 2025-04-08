@@ -51,3 +51,12 @@ func (r *userRepository) GetAllByFilter(filter dto.UserFilter) (users []*models.
 	err = query.Count(&total).Find(&users).Error
 	return
 }
+
+func (r *userRepository) CheckEmailExists(email string) (exists bool, err error) {
+	var count int64
+	err = r.db.Model(&models.User{}).Where("email = ?", email).Count(&count).Error
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
+}
