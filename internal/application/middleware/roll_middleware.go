@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"github.com/amirhosseinf79/online_quiz/internal/dto"
 	"github.com/amirhosseinf79/online_quiz/internal/service"
 	"github.com/gofiber/fiber/v3"
 )
@@ -16,10 +17,14 @@ func NewRollMiddleware(userService service.UserService) RollMiddleware {
 func (roll *rollMiddleware) AdminRequired(c fiber.Ctx) error {
 	userM, err := roll.userService.GetUserById(c.Locals("userId").(uint))
 	if err != nil {
-		return err
+		return c.Status(fiber.StatusUnauthorized).JSON(dto.ErrorResponse{
+			Message: "Unauthorized",
+		})
 	}
 	if userM.Role != "admin" {
-		return fiber.NewError(fiber.StatusForbidden, "Admin role required")
+		return c.Status(fiber.StatusForbidden).JSON(dto.ErrorResponse{
+			Message: "Access denied",
+		})
 	}
 	return c.Next()
 }

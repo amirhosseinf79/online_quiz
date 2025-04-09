@@ -6,12 +6,12 @@ type QuestionFilter struct {
 }
 
 type QuestionCreate struct {
-	QuizID  uint           `body:"quiz_id" validate:"required"`
-	Text    string         `body:"text" validate:"required"`
-	Answers []AnswerFields `body:"answers" validate:"required,dive"`
+	QuizID  uint           `form:"quiz_id" validate:"required"`
+	Text    string         `form:"text" validate:"required"`
+	Answers []AnswerFields `form:"answers" validate:"required,dive"`
 }
 
 type QuestionUpdate struct {
-	ID uint `body:"id" validate:"required"`
-	QuestionCreate
+	ID   uint   `form:"id" validate:"required"`
+	Text string `form:"text" validate:"required"`
 }

@@ -17,11 +17,12 @@ func NewAnswerService(answerRepo repository.AnswerRepository) AnswerService {
 }
 
 func (as *answerService) UpdateAnswer(fields dto.AnswerUpdate) (answer *models.Answer, err error) {
-	answerM := &models.Answer{
-		ID:        fields.ID,
-		Text:      fields.Text,
-		IsCorrect: fields.IsCorrect,
+	answerM, err := as.answerRepo.GetByID(fields.ID)
+	if err != nil {
+		return nil, err
 	}
+	answerM.Text = fields.Text
+	answerM.IsCorrect = fields.IsCorrect
 	err = as.answerRepo.Update(answerM)
 	answer = answerM
 	return

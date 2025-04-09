@@ -6,10 +6,13 @@ import (
 	"github.com/amirhosseinf79/online_quiz/internal/domain/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func NewDB(connStr string) *gorm.DB {
-	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		log.Fatal("failed to connect database:", err)
 	}
@@ -19,6 +22,7 @@ func NewDB(connStr string) *gorm.DB {
 		&models.Quiz{},
 		&models.Question{},
 		&models.Answer{},
+		&models.Token{},
 	)
 	if err != nil {
 		log.Fatal("failed to migrate database:", err)

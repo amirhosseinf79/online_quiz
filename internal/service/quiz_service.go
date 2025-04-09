@@ -30,11 +30,29 @@ func (s *quizService) GetQuizById(id uint) (quiz *models.Quiz, err error) {
 
 func (s *quizService) CreateQuiz(quiz dto.QuizCreate) (*models.Quiz, error) {
 	quizModel := &models.Quiz{
-		Name: quiz.Name,
+		Name:     quiz.Name,
+		Duration: quiz.Duration,
 	}
+
 	valid, err := s.quizRepo.CheckQuizDate(quiz.StartAt, quiz.EndAt)
 	if err != nil {
 		return nil, err
+	}
+
+	if quiz.StartAt != "" {
+		start_at, err := time.Parse(time.RFC3339, quiz.StartAt)
+		if err != nil {
+			return nil, err
+		}
+		quizModel.StartAt = start_at
+	}
+
+	if quiz.EndAt != "" {
+		endAt, err := time.Parse(time.RFC3339, quiz.EndAt)
+		if err != nil {
+			return nil, err
+		}
+		quizModel.EndAt = endAt
 	}
 
 	if !valid {
@@ -50,40 +68,56 @@ func (s *quizService) CreateQuiz(quiz dto.QuizCreate) (*models.Quiz, error) {
 }
 
 func (s *quizService) UpdateQuiz(quiz dto.QuizUpdate) (*models.Quiz, error) {
-	valid, err := s.quizRepo.CheckQuizDate(quiz.StartAt, quiz.EndAt)
+	quizM, err := s.quizRepo.GetByID(quiz.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	if !valid {
-		return nil, dto.ErrQuizDateNotValid
+	if quiz.Name != "" {
+		quizM.Name = quiz.Name
+	}
+	if quiz.Duration != 0 {
+		quizM.Duration = quiz.Duration
 	}
 
-	startAt, err := time.Parse(time.RFC3339, quiz.StartAt)
-	if err != nil {
+	if quiz.StartAt != "" {
+		start_at, err := time.Parse(time.RFC3339, quiz.StartAt)
+		if err != nil {
+			return nil, err
+		}
+		quizM.StartAt = start_at
+	}
+
+	if quiz.EndAt != "" {
+		endAt, err := time.Parse(time.RFC3339, quiz.EndAt)
+		if err != nil {
+			return nil, err
+		}
+		quizM.EndAt = endAt
+	}
+
+	if quiz.EndAt != "" || quiz.StartAt != "" {
+		valid, err := s.quizRepo.CheckQuizDate(quizM.StartAt.Format(time.RFC3339), quizM.EndAt.Format(time.RFC3339))
+		if err != nil {
+			return nil, err
+		}
+
+		if !valid {
+			return nil, dto.ErrQuizDateNotValid
+		}
+	}
+
+	if err = s.quizRepo.Update(quizM); err != nil {
 		return nil, err
 	}
 
-	endAt, err := time.Parse(time.RFC3339, quiz.EndAt)
-	if err != nil {
-		return nil, err
-	}
-
-	quizModel := &models.Quiz{
-		ID:       quiz.ID,
-		Name:     quiz.Name,
-		Duration: quiz.Duration,
-		StartAt:  startAt,
-		EndAt:    endAt,
-	}
-
-	if err = s.quizRepo.Update(quizModel); err != nil {
-		return nil, err
-	}
-
-	return quizModel, nil
+	return quizM, nil
 }
 
 func (s *quizService) DeleteQuiz(id uint) error {
-	return s.quizRepo.Delete(id)
+	quizM, err := s.quizRepo.GetByID(id)
+	if err != nil {
+		return err
+	}
+	return s.quizRepo.Delete(quizM.ID)
 }

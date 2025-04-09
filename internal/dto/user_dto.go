@@ -5,13 +5,13 @@ type UserFilter struct {
 }
 
 type UserLogin struct {
-	Email    string `body:"email" validate:"required,email"`
-	Password string `body:"password" validate:"required"`
+	Email    string `form:"email" validate:"required,email"`
+	Password string `form:"password" validate:"required"`
 }
 
 type UserRegister struct {
-	Email     string `body:"email" validate:"required,email"`
-	Password  string `body:"password" validate:"required"`
-	FirstName string `body:"first_name" validate:"required"`
-	LastName  string `body:"last_name" validate:"required"`
+	Email     string `form:"email" validate:"required,email"`
+	Password  string `form:"password" validate:"required"`
+	FirstName string `form:"first_name" validate:"required"`
+	LastName  string `form:"last_name" validate:"required"`
 }

@@ -29,6 +29,8 @@ type QuestionService interface {
 	GetAllByFilter(filter dto.QuestionFilter) ([]*models.Question, int64, error)
 	GetQuestionById(id uint) (*models.Question, error)
 	CreateQuestion(question dto.QuestionCreate) (*models.Question, error)
+	UpdateQuestion(question dto.QuestionUpdate) (*models.Question, error)
+	DeleteQuestion(id uint) error
 }
 
 type AnswerService interface {

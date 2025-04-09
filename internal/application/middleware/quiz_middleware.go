@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/amirhosseinf79/online_quiz/internal/dto"
@@ -21,7 +22,7 @@ func NewQuizMiddleware(userService service.UserService, quizService service.Quiz
 }
 
 func (quiz *quizMiddleware) QuizDateValid(c fiber.Ctx) error {
-	quizID := fiber.Params[uint](c, "quizID")
+	quizID := fiber.Params[uint](c, "id")
 	if quizID == 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(dto.ErrorResponse{
 			Message: "Quiz ID is required",
@@ -34,6 +35,7 @@ func (quiz *quizMiddleware) QuizDateValid(c fiber.Ctx) error {
 			Message: "Quiz not found",
 		})
 	}
+	fmt.Println(quizM)
 	c.Locals("quiz", quizM)
 	user, err := quiz.userService.GetUserById(c.Locals("userId").(uint))
 	if err != nil {
