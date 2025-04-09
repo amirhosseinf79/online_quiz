@@ -44,3 +44,9 @@ func (r *quizRepo) GetAllByFilter(filter dto.QuizFilter) (quizzes []*models.Quiz
 	err = query.Count(&total).Offset(offset).Limit(limit).Find(&quizzes).Error
 	return
 }
+
+func (r *quizRepo) CheckQuizDate(startAt, endAt string) (bool, error) {
+	var total int64
+	err := r.db.Model(&models.Quiz{}).Where("start_at < ? AND end_at > ?", endAt, startAt).Count(&total).Error
+	return total == 0, err
+}

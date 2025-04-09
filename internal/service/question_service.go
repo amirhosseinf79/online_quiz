@@ -52,3 +52,35 @@ func (qs *questionService) CreateQuestion(question dto.QuestionCreate) (createdQ
 	}
 	return
 }
+
+func (qs *questionService) UpdateQuestion(question dto.QuestionUpdate) (questionM *models.Question, err error) {
+	questionM = &models.Question{
+		ID:       question.ID,
+		QuizID:   question.QuizID,
+		Question: question.Text,
+	}
+	if len(question.Answers) < 4 {
+		err = dto.ErrNoAnswersProvided
+		return
+	}
+
+	var correctAnswersCount int
+	for _, answer := range question.Answers {
+		questionM.Answers = append(questionM.Answers, models.Answer{Text: answer.Text, IsCorrect: answer.IsCorrect})
+		if answer.IsCorrect {
+			correctAnswersCount++
+		}
+	}
+
+	if correctAnswersCount == 1 {
+		err = qs.questionRepo.Update(questionM)
+	} else {
+		err = dto.ErrMultipleCorrectAnswers
+	}
+	return
+}
+
+func (qs *questionService) DeleteQuestion(id uint) (err error) {
+	err = qs.questionRepo.Delete(id)
+	return
+}

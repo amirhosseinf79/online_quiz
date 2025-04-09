@@ -8,17 +8,21 @@ import (
 type UserService interface {
 	RegisterUser(creds dto.UserRegister) (*models.Token, error)
 	LoginUser(creds dto.UserLogin) (*models.Token, error)
+	GetUserById(id uint) (*models.User, error)
 }
 
 type TokenService interface {
 	GenerateToken(userId uint) (*models.Token, error)
 	RefreshToken(refreshToken string) (*models.Token, error)
+	GetByToken(token string) (*models.Token, error)
 }
 
 type QuizService interface {
 	GetAllByFilter(filter dto.QuizFilter) ([]*models.Quiz, int64, error)
 	GetQuizById(id uint) (*models.Quiz, error)
 	CreateQuiz(quiz dto.QuizCreate) (*models.Quiz, error)
+	UpdateQuiz(quiz dto.QuizUpdate) (*models.Quiz, error)
+	DeleteQuiz(id uint) error
 }
 
 type QuestionService interface {

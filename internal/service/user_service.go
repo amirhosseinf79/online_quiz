@@ -67,3 +67,8 @@ func (s *userService) LoginUser(creds dto.UserLogin) (*models.Token, error) {
 
 	return token, nil
 }
+
+func (s *userService) GetUserById(id uint) (*models.User, error) {
+	user, err := s.userRepo.GetByID(id)
+	return user, err
+}

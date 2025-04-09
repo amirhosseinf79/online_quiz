@@ -35,3 +35,11 @@ func (t *tokenService) RefreshToken(refreshToken string) (*models.Token, error) 
 	err = t.repo.Update(tokenM)
 	return tokenM, err
 }
+
+func (t *tokenService) GetByToken(token string) (*models.Token, error) {
+	tokenM, err := t.repo.GetByToken(token)
+	if err != nil {
+		return nil, err
+	}
+	return tokenM, nil
+}
