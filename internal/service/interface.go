@@ -36,3 +36,11 @@ type QuestionService interface {
 type AnswerService interface {
 	UpdateAnswer(fields dto.AnswerUpdate) (*models.Answer, error)
 }
+
+type UserResultService interface {
+	CreateOrGet(fields dto.ResultCreate) (*models.UserResult, error)
+}
+
+type UserAnswerService interface {
+	AddAnswer(fields dto.AddUserAnswer) error
+}
