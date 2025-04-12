@@ -23,6 +23,8 @@ func NewDB(connStr string) *gorm.DB {
 		&models.Question{},
 		&models.Answer{},
 		&models.Token{},
+		&models.UserResult{},
+		&models.UserAnswer{},
 	)
 	if err != nil {
 		log.Fatal("failed to migrate database:", err)

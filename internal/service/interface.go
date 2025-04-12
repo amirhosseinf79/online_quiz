@@ -39,6 +39,7 @@ type AnswerService interface {
 
 type UserResultService interface {
 	CreateOrGet(fields dto.ResultCreate) (*models.UserResult, error)
+	GetByID(id uint) (*models.UserResult, error)
 }
 
 type UserAnswerService interface {

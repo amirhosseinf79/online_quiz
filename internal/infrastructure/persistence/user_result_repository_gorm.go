@@ -25,7 +25,7 @@ func (r *userResultRepo) Update(result *models.UserResult) error {
 
 func (r *userResultRepo) GetByID(id uint) (*models.UserResult, error) {
 	var result models.UserResult
-	err := r.db.First(&result, id).Error
+	err := r.db.Preload("Answers").Preload("Quiz").First(&result, id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (r *userResultRepo) GetByID(id uint) (*models.UserResult, error) {
 
 func (r *userResultRepo) GetByQuizUSerID(quizID, userID uint) (*models.UserResult, error) {
 	var result models.UserResult
-	err := r.db.Where("quiz_id = ? AND user_id = ?", quizID, userID).First(&result).Error
+	err := r.db.Preload("Answers").Preload("Quiz").Where("quiz_id = ? AND user_id = ?", quizID, userID).First(&result).Error
 	if err != nil {
 		return nil, err
 	}

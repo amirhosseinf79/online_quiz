@@ -17,6 +17,11 @@ func NewUserResultService(repo repository.UserResultRepository) UserResultServic
 	return &userResultService{repo: repo}
 }
 
+func (s *userResultService) GetByID(id uint) (*models.UserResult, error) {
+	result, err := s.repo.GetByID(id)
+	return result, err
+}
+
 func (s *userResultService) CreateOrGet(fields dto.ResultCreate) (*models.UserResult, error) {
 	result, err := s.repo.GetByQuizUSerID(fields.QuizID, fields.UserID)
 	if err == nil {
@@ -35,6 +40,10 @@ func (s *userResultService) CreateOrGet(fields dto.ResultCreate) (*models.UserRe
 	err = s.repo.Create(newResult)
 	if err != nil {
 		return nil, err
+	}
+	result, err = s.repo.GetByQuizUSerID(fields.QuizID, fields.UserID)
+	if err == nil {
+		return result, nil
 	}
 
 	return newResult, nil

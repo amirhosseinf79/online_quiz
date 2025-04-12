@@ -13,3 +13,7 @@ type RollMiddleware interface {
 type QuizMiddleware interface {
 	QuizDateValid(c fiber.Ctx) error
 }
+
+type AnswerMiddleware interface {
+	CheckAnswer(c fiber.Ctx) error
+}

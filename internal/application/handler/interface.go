@@ -30,3 +30,11 @@ type QuestionHandler interface {
 type AnswerHandler interface {
 	UpdateAnswer(c fiber.Ctx) error
 }
+
+type UserResultHandler interface {
+	GetQuizResultDetails(c fiber.Ctx) error
+}
+
+type UserAnsHandler interface {
+	AddAnswer(c fiber.Ctx) error
+}

@@ -9,6 +9,7 @@ func (s server) InitRoutes() {
 	s.initQuizRoutes(api)
 	s.initQuestionRoutes(api)
 	s.initAnswerRoutes(api)
+	s.initQuizResultRoutes(api)
 }
 
 func (s server) initAuthRoutes(api fiber.Router) {
@@ -35,4 +36,9 @@ func (s server) initQuestionRoutes(api fiber.Router) {
 
 func (s server) initAnswerRoutes(api fiber.Router) {
 	api.Put("/answer/edit", s.answerHandler.UpdateAnswer, s.rollMiddleware.AdminRequired)
+}
+
+func (s server) initQuizResultRoutes(api fiber.Router) {
+	api.Get("/getResult", s.userResultHandler.GetQuizResultDetails)
+	api.Post("/addAnswer", s.userAnswerHandler.AddAnswer, s.ansCheckMiddleware.CheckAnswer)
 }

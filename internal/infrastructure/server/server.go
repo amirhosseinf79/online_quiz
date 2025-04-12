@@ -10,35 +10,45 @@ import (
 )
 
 type server struct {
-	app             *fiber.App
-	tokenMiddleware middleware.TokenMiddleware
-	quizMiddleware  middleware.QuizMiddleware
-	rollMiddleware  middleware.RollMiddleware
-	userHandler     handler.UserHandler
-	quizHandler     handler.QuizHandler
-	questionHandler handler.QuestionHandler
-	answerHandler   handler.AnswerHandler
-	tokenHandler    handler.TokenHandler
+	app                *fiber.App
+	tokenMiddleware    middleware.TokenMiddleware
+	quizMiddleware     middleware.QuizMiddleware
+	rollMiddleware     middleware.RollMiddleware
+	ansCheckMiddleware middleware.AnswerMiddleware
+	userHandler        handler.UserHandler
+	quizHandler        handler.QuizHandler
+	questionHandler    handler.QuestionHandler
+	answerHandler      handler.AnswerHandler
+	tokenHandler       handler.TokenHandler
+	userResultHandler  handler.UserResultHandler
+	userAnswerHandler  handler.UserAnsHandler
 }
 
 func NewServer(
 	tokenMiddleware middleware.TokenMiddleware,
 	quizMiddleware middleware.QuizMiddleware,
 	rollMiddleware middleware.RollMiddleware,
+	ansCheckMiddleware middleware.AnswerMiddleware,
 	userHandler handler.UserHandler,
 	quizHandler handler.QuizHandler,
 	questionHandler handler.QuestionHandler,
 	answerHandler handler.AnswerHandler,
-	tokenHandler handler.TokenHandler) *server {
+	tokenHandler handler.TokenHandler,
+	userResultHandler handler.UserResultHandler,
+	userAnswerHandler handler.UserAnsHandler,
+) *server {
 	return &server{
-		tokenMiddleware: tokenMiddleware,
-		quizMiddleware:  quizMiddleware,
-		rollMiddleware:  rollMiddleware,
-		userHandler:     userHandler,
-		quizHandler:     quizHandler,
-		questionHandler: questionHandler,
-		answerHandler:   answerHandler,
-		tokenHandler:    tokenHandler,
+		tokenMiddleware:    tokenMiddleware,
+		quizMiddleware:     quizMiddleware,
+		rollMiddleware:     rollMiddleware,
+		ansCheckMiddleware: ansCheckMiddleware,
+		userHandler:        userHandler,
+		quizHandler:        quizHandler,
+		questionHandler:    questionHandler,
+		answerHandler:      answerHandler,
+		tokenHandler:       tokenHandler,
+		userResultHandler:  userResultHandler,
+		userAnswerHandler:  userAnswerHandler,
 	}
 }
 

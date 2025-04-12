@@ -17,3 +17,4 @@ var ErrQuizEndTimeInvalid = errors.New("quiz end time must be greater than start
 var ErrQuizDateNotValid = errors.New("another quiz has been created at selected time")
 var ErrQuizNotStarted = errors.New("quiz has not started yet")
 var ErrQuizEnded = errors.New("quiz has ended")
+var ErrPermission = errors.New("You don't have permission to perform this action.")
