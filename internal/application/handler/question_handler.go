@@ -27,7 +27,9 @@ func (questionHandler *questionHandler) GetAllQuestions(c fiber.Ctx) error {
 	filter.PageFilter.SetDefaults()
 	questions, total, err := questionHandler.questionService.GetAllByFilter(filter)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to retrieve questions"})
+		return c.Status(fiber.StatusInternalServerError).JSON(dto.ErrorResponse{
+			Message: "Failed to retrieve questions",
+		})
 	}
 
 	return c.JSON(fiber.Map{
