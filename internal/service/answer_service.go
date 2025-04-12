@@ -21,8 +21,27 @@ func (as *answerService) UpdateAnswer(fields dto.AnswerUpdate) (answer *models.A
 	if err != nil {
 		return nil, err
 	}
+
 	answerM.Text = fields.Text
 	answerM.IsCorrect = fields.IsCorrect
+
+	if fields.IsCorrect {
+		// Set other answers for the same question to incorrect
+		err = as.answerRepo.SetOtherAnswersIncorrect(answerM.QuestionID, answerM.ID)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		// Ensure at least one correct answer exists
+		count, err := as.answerRepo.CountCorrectAnswers(answerM.QuestionID, answerM.ID)
+		if err != nil {
+			return nil, err
+		}
+		if count == 0 {
+			return nil, dto.ErrMultipleCorrectAnswers
+		}
+	}
+
 	err = as.answerRepo.Update(answerM)
 	answer = answerM
 	return
