@@ -34,7 +34,7 @@ func (s *quizService) CreateQuiz(quiz dto.QuizCreate) (*models.Quiz, error) {
 		Duration: quiz.Duration,
 	}
 
-	valid, err := s.quizRepo.CheckQuizDate(quiz.StartAt, quiz.EndAt)
+	valid, err := s.quizRepo.CheckQuizDate(quiz.StartAt, quiz.EndAt, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -53,6 +53,10 @@ func (s *quizService) CreateQuiz(quiz dto.QuizCreate) (*models.Quiz, error) {
 			return nil, err
 		}
 		quizModel.EndAt = endAt
+	}
+
+	if invalid := quizModel.EndAt.Before(quizModel.StartAt); invalid {
+		return nil, dto.ErrQuizEndTimeInvalid
 	}
 
 	if !valid {
@@ -96,15 +100,16 @@ func (s *quizService) UpdateQuiz(quiz dto.QuizUpdate) (*models.Quiz, error) {
 		quizM.EndAt = endAt
 	}
 
-	if quiz.EndAt != "" || quiz.StartAt != "" {
-		valid, err := s.quizRepo.CheckQuizDate(quizM.StartAt.Format(time.RFC3339), quizM.EndAt.Format(time.RFC3339))
-		if err != nil {
-			return nil, err
-		}
+	if invalid := quizM.EndAt.Before(quizM.StartAt); invalid {
+		return nil, dto.ErrQuizEndTimeInvalid
+	}
 
-		if !valid {
-			return nil, dto.ErrQuizDateNotValid
-		}
+	valid, err := s.quizRepo.CheckQuizDate(quizM.StartAt.Format(time.RFC3339), quizM.EndAt.Format(time.RFC3339), quizM.ID)
+	if err != nil {
+		return nil, err
+	}
+	if !valid {
+		return nil, dto.ErrQuizDateNotValid
 	}
 
 	if err = s.quizRepo.Update(quizM); err != nil {

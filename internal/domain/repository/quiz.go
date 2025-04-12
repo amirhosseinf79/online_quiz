@@ -8,7 +8,7 @@ import (
 type QuizRepository interface {
 	GetByID(id uint) (*models.Quiz, error)
 	GetAllByFilter(filter dto.QuizFilter) ([]*models.Quiz, int64, error)
-	CheckQuizDate(startAt, endAt string) (bool, error)
+	CheckQuizDate(startAt, endAt string, excludeID uint) (bool, error)
 	Create(quiz *models.Quiz) error
 	Update(quiz *models.Quiz) error
 	Delete(id uint) error
