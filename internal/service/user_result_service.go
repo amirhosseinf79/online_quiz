@@ -77,5 +77,6 @@ func (s *userResultService) UpdateResult(fields dto.ResultCreate) (result *model
 		return
 	}
 	err = s.userResultRepo.UpdateScore(result.ID, score)
+	result.Score = score
 	return
 }
