@@ -64,9 +64,6 @@ func (s *userResultService) UpdateResult(fields dto.ResultCreate) (result *model
 	if err != nil {
 		return
 	}
-	if result.Score != 0 {
-		return
-	}
 	totalQuestions, err := s.questionRepo.TotalQuestions(result.QuizID)
 	if err != nil {
 		return
@@ -76,8 +73,8 @@ func (s *userResultService) UpdateResult(fields dto.ResultCreate) (result *model
 		return
 	}
 	score := (float64(trueAnswers) / float64(totalQuestions)) * 100
-	if score == 0 {
-		score = 0.1
+	if score == result.Score {
+		return
 	}
 	err = s.userResultRepo.UpdateScore(result.ID, score)
 	return
