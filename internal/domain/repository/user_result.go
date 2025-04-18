@@ -8,6 +8,7 @@ import (
 type UserResultRepository interface {
 	Create(result *models.UserResult) error
 	Update(result *models.UserResult) error
+	UpdateScore(id uint, score float64) error
 	GetByID(id uint) (*models.UserResult, error)
 	GetByQuizUSerID(quizID, userID uint) (*models.UserResult, error)
 	GetAll(filter dto.ResultFilter) ([]*models.UserResult, int64, error)

@@ -47,3 +47,9 @@ func (r *questionRepo) GetAllByFilter(filter dto.QuestionFilter) ([]*models.Ques
 
 	return questions, total, nil
 }
+
+func (r *questionRepo) TotalQuestions(quizID uint) (int64, error) {
+	var total int64
+	err := r.db.Model(&models.Question{}).Where("quiz_id = ?", quizID).Preload("Answers").Count(&total).Error
+	return total, err
+}

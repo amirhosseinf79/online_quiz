@@ -7,6 +7,7 @@ import (
 
 type QuestionRepository interface {
 	GetAllByFilter(filter dto.QuestionFilter) ([]*models.Question, int64, error)
+	TotalQuestions(quizID uint) (int64, error)
 	GetByID(id uint) (*models.Question, error)
 	Create(quiz *models.Question) error
 	Update(quiz *models.Question) error

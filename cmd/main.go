@@ -25,8 +25,8 @@ func main() {
 	quizService := service.NewQuizService(quizRepo)
 	questionService := service.NewQuestionService(questionRepo)
 	answerService := service.NewAnswerService(answerRepo)
-	userResultService := service.NewUserResultService(userResultRepo)
 	userAnsService := service.NewUserAnswerService(userAnsRepo)
+	userResultService := service.NewUserResultService(userResultRepo, userAnsRepo, questionRepo)
 
 	tokenMiddleware := middleware.NewAuthMiddleware(tokenService)
 	rollMiddleware := middleware.NewRollMiddleware(userService)

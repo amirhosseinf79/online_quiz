@@ -6,4 +6,5 @@ type UserAnswerRepository interface {
 	Create(answer *models.UserAnswer) error
 	Update(answer *models.UserAnswer) error
 	GetAnswer(resultID, questionID uint) (*models.UserAnswer, error)
+	GetCurrectAnsCount(resultID uint) (int64, error)
 }

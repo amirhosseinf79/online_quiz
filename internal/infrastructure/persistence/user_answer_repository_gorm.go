@@ -30,3 +30,11 @@ func (r *userAnswerRepo) GetAnswer(resultID, questionID uint) (*models.UserAnswe
 	}
 	return answer, nil
 }
+
+func (r *userAnswerRepo) GetCurrectAnsCount(resultID uint) (int64, error) {
+	var trueAnswers int64
+	model := r.db.Model(models.UserAnswer{}).Joins("JOIN answers ON answers.id = answer_id")
+	model.Where("user_result_id = ? AND answers.is_correct = true", resultID).Count(&trueAnswers)
+	err := model.Error
+	return trueAnswers, err
+}

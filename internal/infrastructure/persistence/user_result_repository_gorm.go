@@ -5,6 +5,7 @@ import (
 	"github.com/amirhosseinf79/online_quiz/internal/domain/repository"
 	"github.com/amirhosseinf79/online_quiz/internal/dto"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type userResultRepo struct {
@@ -21,6 +22,11 @@ func (r *userResultRepo) Create(result *models.UserResult) error {
 
 func (r *userResultRepo) Update(result *models.UserResult) error {
 	return r.db.Save(result).Error
+}
+
+func (r *userResultRepo) UpdateScore(id uint, score float64) error {
+	err := r.db.Model(models.UserResult{}).Omit(clause.Associations).Where("id = ?", id).Update("score", score).Error
+	return err
 }
 
 func (r *userResultRepo) GetByID(id uint) (*models.UserResult, error) {

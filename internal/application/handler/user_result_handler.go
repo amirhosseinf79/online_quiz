@@ -21,7 +21,8 @@ func (h *userResultHandler) GetQuizResultDetails(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(response)
 	}
 	filter.UserID = c.Locals("userId").(uint)
-	userResult, err := h.userResultService.CreateOrGet(filter)
+
+	userResult, err := h.userResultService.UpdateResult(filter)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(dto.ErrorResponse{
 			Message: "Faild to obtain result id",
